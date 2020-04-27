@@ -1,0 +1,45 @@
+﻿@model ManageRoles.ViewModels.MonThiViewModel
+@{
+	ViewBag.Title = "Create Môn thi";
+	Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+}
+
+<h4 class="page-header">Tạo môn thi</h4>
+<div class="panel panel-default">
+	<div class="panel-heading">Tạo môn thi</div>
+	<div class="panel-body">
+		@if (TempData["MessageCreateUsers"] != null)
+		{
+			<div class="alert alert-danger alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Message!</strong> @TempData["MessageCreateUsers"]
+			</div>
+		}
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		@using (Html.BeginForm())
+		{
+			@Html.AntiForgeryToken()
+
+			<div class="row">
+				<div class="col-lg-4">
+					@Html.Label("Mã môn thi", htmlAttributes: new { @class = "control-label manadatory" })
+					@Html.TextBoxFor(model => model.MaMonThi, new { @class = "form-control",@maxlength = 40, @onkeypress = "return onlyspecchar(event);", @readonly = "readonly" })
+					@Html.ValidationMessageFor(model => model.MaMonThi, "", new { @class = "text-danger" })
+				</div>
+				<div class="col-lg-4">
+					@Html.Label("Tên môn thi", htmlAttributes: new { @class = "control-label manadatory" })
+					@Html.TextBoxFor(model => model.TenMonThi, new { @class = "form-control" })
+					@Html.ValidationMessageFor(model => model.TenMonThi, "", new { @class = "text-danger" })
+				</div>				
+			</div>
+		
+			<br />
+			<div class="row">
+				<div class="col-lg-4">
+					<input type="submit" value="Tạo môn thi" class="btn btn-success" />
+					
+				</div>
+			</div>
+		}
+	</div>
+</div>

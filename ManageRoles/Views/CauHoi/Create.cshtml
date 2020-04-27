@@ -1,0 +1,139 @@
+﻿@model ManageRoles.ViewModels.CauHoiViewModel
+@{
+	ViewBag.Title = "Create Đề thi";
+	Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+}
+
+
+<meta name="viewport" content="width=device-width" />
+<title>Index</title>
+<link href="~/Scripts/JqueryUI/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Scripts/jtable/themes/metro/lightgray/jtable.min.css" rel="stylesheet" />
+
+<!--Adding jquery Plugin-->
+<script src="~/Scripts/jquery-ui-1.9.2.min.js"></script>
+<!--Adding jTable Plugin-->
+<script src="~/Scripts/jtable/jquery.jtable.min.js"></script>
+<!-- Import CSS file for validation engine (in Head section of HTML) -->
+<link href="~/Scripts/validationEngine/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+
+<script>
+	$(document).ready(function () {
+		$('#CauHoiContainer').jtable({
+			title: 'Thêm câu hỏi',
+			paging: true,
+			pageSize: 10,
+			sorting: true,
+			actions:
+			{
+				listAction: '/CauHoi/ListCauHoi',
+				createAction: '/CauHoi/AddCreateItem',
+				updateAction: '/CauHoi/EditItem',
+				deleteAction: '/CauHoi/DeleteItem'
+			},
+			fields: {
+				ID: {
+					key: true,
+					list: false
+				},
+				DeBai: {
+					title: 'Đề bài',
+					width: '20%'
+				},
+				PhuongAnA: {
+					title: 'Phương án A',
+					width: '15%'
+				},
+				PhuongAnB: {
+					title: 'Phương án B',
+					width: '15%'
+				},
+				PhuongAnC: {
+					title: 'Phương án C',
+					width: '15%'
+				},
+				PhuongAnD: {
+					title: 'Phương án D',
+					width: '15%'
+				},
+				DapAn: {
+					title: 'Đáp án',
+					options: { 'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D' },
+					width: '15%'
+				},
+				Status: {
+					title: 'Status',
+					width: '12%',
+					type: 'checkbox',
+					values: { 'false': 'Deactivate', 'true': 'Active' },
+					defaultValue: 'true'
+				}
+			}
+		});
+
+		//Re-load records when user click 'load records' button.
+		$('#BtnSearch').click(function (e) {
+			e.preventDefault();
+			$('#CauHoiContainer').jtable('load', {
+				username: $('#username').val()
+			});
+		});
+		$('#btnsave').click(function (e) {
+			SaveData();
+		});
+		//Load Customer data from server
+		$('#CauHoiContainer').jtable('load');
+	});
+
+	function SaveData() {
+		var check = $('#IDDeThi').val();
+		if (check == -1) {
+			alert("Vui lòng không để trống tên đề thi!");
+		}
+		else {
+			$.ajax({
+				url: "/CauHoi/SaveDate",
+				type: "POST",  
+				dataType: "text",
+				data: {
+					IdDeThi: check
+				},
+				success: function (Result) {
+					alert(Result);
+					$("#CauHoiContainer tbody tr").empty();
+				},
+
+				error: function (errormessage) {
+					alert(errormessage.responseText);
+				}
+			});
+		}
+		
+	}
+</script>
+<script src="~/Scripts/ValidationScript/ViewRoles.js"></script>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<hr />
+		<div class="row">
+			<div class="col-lg-4">
+				@Html.Label("Đề thi", htmlAttributes: new { @class = "control-label manadatory" })
+				@Html.DropDownListFor(model => model.IDDeThi, new SelectList(Model.ListDeThi, "ID", "TenDeThi"), new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.IDDeThi, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div id="CauHoiContainer"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<input id="btnsave" type="button" value="Lưu lại" class="btn btn-default" />
+
+		</div>
+
+	</div>
+</div>
+
+

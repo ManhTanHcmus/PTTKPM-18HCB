@@ -1,0 +1,44 @@
+﻿@model ManageRoles.ViewModels.ToChucThiViewModel
+@{
+	Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+}
+<h4 class="page-header">Roles</h4>
+<div class="panel panel-default">
+	<div class="panel-heading">Assign Roles</div>
+	<div class="panel-body">
+		@if (TempData["AssignedMessage"] != null)
+		{
+			<p class="alert alert-success" id="successMessage">@TempData["AssignedMessage"]</p>
+		}
+
+		@if (TempData["AssignedErrorMessage"] != null)
+		{
+			<p class="alert alert-danger" id="errorMessage">@TempData["AssignedErrorMessage"]</p>
+		}
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		@using (Html.BeginForm())
+		{
+			@Html.AntiForgeryToken()
+
+
+			<div class="row">
+				<div class="col-lg-4">
+					@Html.Label("User", htmlAttributes: new { @class = "control-label manadatory" })
+					@Html.DropDownListFor(m => m.IDUser, new SelectList(Model.ListUsers, "UserId", "UserName"), new { @class = "form-control" })
+					@Html.ValidationMessageFor(model => model.IDUser, "", new { @class = "text-danger" })
+				</div>
+				<div class="col-lg-4">
+					@Html.Label("Đề thi", htmlAttributes: new { @class = "control-label manadatory" })
+					@Html.DropDownListFor(m => m.IDDeThi, new SelectList(Model.ListDeThi, "ID", "TenDeThi"), new { @class = "form-control" })
+					@Html.ValidationMessageFor(model => model.IDDeThi, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-lg-4">
+					<input type="submit" value="Phân thi" class="btn btn-success" />
+				</div>
+			</div>
+		}
+	</div>
+</div>
